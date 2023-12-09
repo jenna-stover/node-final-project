@@ -1,0 +1,232 @@
+/* Structure */
+
+body {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color:lightsteelblue;
+}
+
+#main-header {
+    background-color:rgb(214, 215, 223);
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 10px;
+    border: 2px solid rgb(3, 50, 107);
+}
+
+#content {
+    width: 85%;
+    margin: auto;
+    padding: 3px 5px;
+}
+
+#main-content {
+    background-color:rgb(214, 215, 223);
+    border-radius: 10px;
+    border: 2px solid rgb(3, 50, 107);
+    padding: 5px;
+}
+
+.internship {
+    text-align: center;
+    text-decoration-color: black;
+    padding: 10px;
+    margin: 10px;
+    background: rgb(238, 239, 246);
+    border-radius: 5px;
+    border: 2px solid rgb(131, 161, 187);
+}
+
+.internship img {
+    max-width: 90%;
+    display: block;
+    margin: auto;
+}
+
+#internship-details-column {
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid rgb(131, 161, 187);
+    background: rgb(238, 239, 246);
+    border-radius: 5px;
+    max-width: 50%;
+}
+
+h2{
+    text-align: center;
+    text-decoration: underline;
+}
+
+#add-link {
+    text-decoration: none;
+    padding: 5px;
+    color: black;
+    background-color: rgb(131, 161, 187);
+    font-size: 1.25em;
+    border-radius: 10px
+}
+
+#add-link:hover {
+    background-color: rgb(149, 180, 208);
+}
+
+#edit-link {
+    float: right;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#delete-link {
+    float: right;
+    cursor: pointer;
+}
+
+#delete-link:hover {
+    color: red;
+}
+
+#add-edit-internship-container {
+    padding: 10px;
+    margin: 10px;
+    background-color: rgb(149, 180, 208);
+    border-radius: 5px;
+}
+
+
+/* Form */
+
+label {
+    display: block;
+}
+
+.inline {
+    display: inline;
+}
+
+
+/* Modal Dialog */
+
+#modal-background {
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+
+/* Modal Content */
+
+.dialog {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+}
+
+.dialog img {
+    max-width: fit-content;
+    display: block;
+    padding: 30px 5px 30px 30px;
+    margin: auto;
+}
+
+
+/* The Close Button */
+
+.close {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 0px 5px;
+}
+
+.close:hover,
+.close:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* Typography */
+
+#main-nav ul {
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(131, 161, 187);
+    margin-bottom: auto;
+    padding: 10px;
+  }
+  
+  #main-nav li {
+    text-align: center;
+    list-style-type: none; 
+  }
+  
+  #main-nav a {
+    text-decoration: none;
+    color: black;
+  }
+  
+  #main-nav a:hover {
+    background-color:  rgb(156, 181, 202);
+    padding: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.transparent {
+    opacity: 0;
+}
+
+h1 a{
+    padding: 5px;
+    color: black;
+    text-decoration: none;
+}
+
+#hamburger div {
+    width: 35px;
+    height: 5px;
+    background-color: black;
+    margin: 6px 0;
+}
+
+.hide-small {
+    display: none;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Larger Resolutions */
+
+@media (min-width: 600px) {
+    .columns, #main-nav ul, .flex-container{
+        display: flex;
+        /* flex-wrap: wrap; */
+    }
+    .internship {
+        width: 25%;
+    }
+    #add-edit-internship-container {
+        max-width: 50%;
+        margin: auto;
+    }
+    #hamburger {
+        display: none;
+    }
+    .hide-small {
+        display: block;
+    }
+}
