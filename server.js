@@ -1,19 +1,23 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const Joi = require("joi");
 const multer = require("multer");
-app.use(express.static("public"));
-app.use(express.json());
+const path = require("path");
 const cors = require("cors");
-app.use(cors());
 const mongoose = require("mongoose");
 
-const upload = multer({ dest: __dirname + "/public/images" });
+app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
+app.use(express.json());
+
+const upload = multer({ dest: path.join(__dirname, "public", "images") });
 
 mongoose
-  .connect(
-    "mongodb+srv://jennastover810:vigmMrzL5iGkqDeU@clusterassignment17.ydj7558.mongodb.net/?retryWrites=true&w=majority"
-  )
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connected to mongodb..."))
   .catch((err) => console.error("could not connect ot mongodb...", err));
 
@@ -27,28 +31,32 @@ const internshipSchema = new mongoose.Schema({
   location: String,
   deadline: String,
   img: String,
+  completed: { type: Boolean, default: false },
 });
 
 const Internship = mongoose.model("Internship", internshipSchema);
 
-app.get("/api/internships", (req, res) => {
-  getInternships(res);
+//fetch all internships
+app.get("/api/internships", async (req, res) => {
+  try {
+    const internships = await Internship.find();
+    res.json(internships);
+  } catch (error) {
+    console.error("Error fetching internships:", error);
+    res.status(500).json("Error fetching internships");
+  }
 });
 
-const getInternships = async (res) => {
-  const internships = await Internship.find();
-  res.send(internships);
-};
-
-app.post("/api/internships", upload.single("img"), (req, res) => {
+//create new internship
+app.post("/api/internships", upload.single('img'), async (req, res) => {
   const result = validateInternship(req.body);
 
   if (result.error) {
-    res.status(400).send(result.error.details[0].message);
+    res.status(400).json(result.error.details[0].message);
     return;
   }
 
-  const internship = new Internship({
+  let internship = new Internship({
     name: req.body.name,
     link: req.body.link,
     location: req.body.location,
@@ -59,51 +67,88 @@ app.post("/api/internships", upload.single("img"), (req, res) => {
     internship.img = "images/" + req.file.filename;
   }
 
-  createInternship(internship, res);
+  try {
+    internship = await internship.save();
+    res.json(internship);
+  } catch (error) {
+    console.error("Error creating internship:", err);
+    res.status(500).json({ error: "Error creating internship" });
+  }
 });
 
-const createInternship = async (internship, res) => {
-  const result = await internship.save();
-  res.send(internship);
-};
+//update existing internship
+app.put("/api/internships/:id", upload.single("img"), async (req, res) => {
+  const { error } = validateInternship(req.body);
 
-app.put("/api/internships/:id", upload.single("img"), (req, res) => {
-  const result = validateInternship(req.body);
-
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
+  if (error) {
+    res.status(400).json(error.details[0].message);
     return;
   }
 
-  updateInternship(req, res);
-});
-
-const updateInternship = async (req, res) => {
   let fieldsToUpdate = {
     name: req.body.name,
     link: req.body.link,
     location: req.body.location,
     deadline: req.body.deadline,
+    completed: req.body.completed,
   };
 
   if (req.file) {
     fieldsToUpdate.img = "images/" + req.file.filename;
   }
 
-  const result = await Internship.updateOne({ _id: req.params.id }, fieldsToUpdate);
-  const internship = await Internship.findById(req.params.id);
-  res.send(internship);
-};
+  try {
+    const internship = await Internship.findByIdAndUpdate(
+      req.params.id,
+      fieldsToUpdate,
+      { new: true }
+    );
 
-app.delete("/api/internships/:id", upload.single("img"), (req, res) => {
-  removeInternship(res, req.params.id);
+    if (!internship) {
+      return res.status(404).json("Internship not found");
+    }
+
+    res.json(internship);
+  } catch (error) {
+    res.status(500).json("Error updating internship");
+  }
 });
 
-const removeInternship = async (res, id) => {
-  const internship = await Internship.findByIdAndDelete(id);
-  res.send(internship);
-};
+app.put("/api/internships/:id/completed", async (req, res) => {
+  try {
+    const internship = await Internship.findByIdAndUpdate(
+      req.params.id,
+      { completed: req.body.completed },
+      { new: true }
+    );
 
+    if (!internship) {
+      return res.status(404).json("Internship not found");
+    }
+
+    res.json(internship);
+  } catch (error) {
+    res.status(500).json("Error updating internship status");
+  }
+});
+
+//delete an existing internship
+app.delete("/api/internships/:id", async (req, res) => {
+  try {
+    const internship = await Internship.findByIdAndDelete(req.params.id);
+    console.log("deleted internship");
+
+    if(!internship) {
+      return res.status(404).json("Internship not found");
+    }
+
+    res.json(internship);
+  } catch (error) {
+    res.status(500).json("Error deleting internship");
+  }
+});
+
+//validate internship data
 const validateInternship = (internship) => {
   const schema = Joi.object({
     _id: Joi.allow(""),
@@ -116,6 +161,7 @@ const validateInternship = (internship) => {
   return schema.validate(internship);
 };
 
-app.listen(3010, () => {
-  console.log("I'm listening");
+const port = process.env.PORT;
+app.listen(port, () => { 
+  console.log(`Server running on http://localhost:${port}`); 
 });

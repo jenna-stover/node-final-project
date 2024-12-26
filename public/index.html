@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div class="content">
+        <header class="main-header">
+            <h1><a href="#">Internship Organizer</a></h1>
+        </header>
+        <main class= "main-content">
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div class="section-one">
+                <div class="internship-list-container split">
+                    <div id="center-internship-list">
+                        <div>
+                            <h2>List of Internships</h2>
+                        </div>
+
+                        <div id="add-button">
+                            <a href="#">Add Internship (+)</a>
+                        </div>
+
+                        <div id="internship-list"></div>
+                    </div>
+                </div>
+
+                <div class="internship-details-container split" class="hidden">
+                    <div id="center-internship-details">
+                        <div>
+                            <h2>Internship Details</h2> 
+                        </div>
+                        
+                        <div id="internship-details">
+                            <p id="placeholder-message">Click on an internship to display details</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-two">
+                <div id="add-edit-internship-container" class="dialog transparent">
+                    <form id="add-edit-internship-form" method="post">
+                        <span class="close">&times;</span>
+                        <h3 id="add-edit-title"></h3>
+                        <input type="hidden" name="_id" value="-1" />
+                        <p>
+                            <label for="name ">Internship Name:</label>
+                            <input type="text" id="name" name="name" required />
+                        </p>
+                        <p>
+                            <label for="link">Link:</label>
+                            <input type="text" id="link" name="link" required />
+                        </p>
+                        <p>
+                            <label for="link">Location:</label>
+                            <input type="text" id="location" name="location" />
+                        </p>
+                        <p>
+                            <label for="link">Deadline:</label>
+                            <input type="date" id="deadline" name="deadline" />
+                        </p>
+                        <p>
+                            <label for="img">Upload Image:</label>
+                            <input type="file" id="img" name="img" />
+                        </p>
+                        <p>
+                            <button id="submit-button" type="submit">Submit</button>
+                        </p>
+                    </form>
+                </div> 
+            </div>
+        </main>
+    </div>
+</body>
+</html>

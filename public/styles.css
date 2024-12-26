@@ -1,182 +1,196 @@
 /* Structure */
-
 body {
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color:lightsteelblue;
 }
 
-#main-header {
-    background-color:rgb(214, 215, 223);
+.content {
+    width: 95%;
+    margin: 0 auto;
+}
+
+.main-header {
+    background-color:rgb(231, 232, 239);
     border-radius: 10px 10px 0 0;
     margin-bottom: 10px;
-    border: 2px solid rgb(3, 50, 107);
-}
-
-#content {
-    width: 85%;
-    margin: auto;
-    padding: 3px 5px;
-}
-
-#main-content {
-    background-color:rgb(214, 215, 223);
-    border-radius: 10px;
-    border: 2px solid rgb(3, 50, 107);
-    padding: 5px;
-}
-
-.internship {
+    border: 1px solid rgb(3, 50, 107);
     text-align: center;
-    text-decoration-color: black;
-    padding: 10px;
-    margin: 10px;
-    background: rgb(238, 239, 246);
-    border-radius: 5px;
-    border: 2px solid rgb(131, 161, 187);
 }
 
-.internship img {
-    max-width: 90%;
-    display: block;
-    margin: auto;
-}
-
-#internship-details-column {
-    padding: 10px;
-    margin: 10px;
-    border: 2px solid rgb(131, 161, 187);
-    background: rgb(238, 239, 246);
-    border-radius: 5px;
-    max-width: 50%;
-}
-
-h2{
-    text-align: center;
-    text-decoration: underline;
-}
-
-#add-link {
+.main-header a{
     text-decoration: none;
-    padding: 5px;
     color: black;
-    background-color: rgb(131, 161, 187);
-    font-size: 1.25em;
-    border-radius: 10px
 }
 
-#add-link:hover {
-    background-color: rgb(149, 180, 208);
+.main-content {
+    display: flex; 
+    flex-direction: column;
+    background-color: rgb(214, 215, 223);
+    border-radius: 0 0 10px 10px;
+    border: 1px solid rgb(3, 50, 107);
+    padding: 5px;
+    min-height: 100vh;
+    width: 100%;
 }
 
-#edit-link {
-    float: right;
-    margin-right: 10px;
+.progress-container {
+    padding: 10px;
+  }
+  
+  #progress-bar {
+    height: 20px; 
+    width: 0; 
+    background-color: rgb(107, 156, 220); 
+    text-align: center; 
+    line-height: 20px;
+    border-radius: 5px; 
+    transition: 0.4s ease; 
+  }
+  
+
+.section-one{
+    display: flex;
+}
+
+.split{
+    flex:1;
+    max-width: 50%;
+    min-width: 50%;
+}
+
+#center-internship-list, #center-internship-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+}
+
+#internship-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+#internship-details{
+    background-color:lightslategray;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    width: 400px;
+}
+
+#placeholder-message {
+    text-align: center;
+}
+
+#edit-link, #delete-link{
+    padding: 5px;
     cursor: pointer;
-}
-
-#delete-link {
     float: right;
-    cursor: pointer;
 }
 
-#delete-link:hover {
+#delete-link:hover{
     color: red;
+}
+
+#edit-link:hover{
+    color: blue;
+}
+
+.internship{
+    display: flex;
+    flex-direction: column;
+    background-color:rgb(231, 232, 239);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+}
+
+.internship img{
+    width: 150px;
+    height: 100px;
+    object-fit: contain;
+    overflow: hidden;
+}
+
+.internship a{
+    text-decoration: none;
+    color: black;
+}
+
+.internship a:hover{
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.68);
+}
+
+#add-button{
+    margin-bottom: 30px;
+}
+
+#add-button, #submit-button {
+    background-color: #B0C3DE;
+    padding: 5px;
+    border: 1px solid transparent;
+    transition: 0.3s ease;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#add-button:hover, #submit-button:hover{
+    background-color: #b0c3dea1;
+    border: 1px solid black;
+}
+
+#add-button a{
+    text-decoration: none;
+    color: black;
+}
+
+.section-two {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 #add-edit-internship-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     padding: 10px;
-    margin: 10px;
-    background-color: rgb(149, 180, 208);
-    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: white;
+    max-width: 500px; 
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+  
+#add-edit-internship-form {
+    width: 80%;
+    box-sizing: border-box;
 }
 
-
-/* Form */
-
-label {
-    display: block;
+#add-edit-title{
+    text-align: center;
 }
-
-.inline {
-    display: inline;
-}
-
-
-/* Modal Dialog */
-
-#modal-background {
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: scroll;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-
-/* Modal Content */
-
-.dialog {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 100%;
-}
-
-.dialog img {
-    max-width: fit-content;
-    display: block;
-    padding: 30px 5px 30px 30px;
-    margin: auto;
-}
-
-
-/* The Close Button */
 
 .close {
-    color: black;
+    top: 10px;
     float: right;
-    font-size: 28px;
-    font-weight: bold;
-    padding: 0px 5px;
-}
-
-.close:hover,
-.close:focus {
-    color: red;
-    text-decoration: none;
     cursor: pointer;
+    font-size: 24px;
 }
 
-
-/* Typography */
-
-#main-nav ul {
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgb(131, 161, 187);
-    margin-bottom: auto;
-    padding: 10px;
-  }
-  
-  #main-nav li {
-    text-align: center;
-    list-style-type: none; 
-  }
-  
-  #main-nav a {
-    text-decoration: none;
-    color: black;
-  }
-  
-  #main-nav a:hover {
-    background-color:  rgb(156, 181, 202);
-    padding: 10px;
+.close:hover{
+    color: red;
 }
 
 .hidden {
@@ -187,46 +201,9 @@ label {
     opacity: 0;
 }
 
-h1 a{
-    padding: 5px;
-    color: black;
-    text-decoration: none;
-}
-
-#hamburger div {
-    width: 35px;
-    height: 5px;
-    background-color: black;
-    margin: 6px 0;
-}
-
-.hide-small {
-    display: none;
-}
-
-.flex-container {
-    display: flex;
-    justify-content: space-between;
-}
-
-/* Larger Resolutions */
-
-@media (min-width: 600px) {
-    .columns, #main-nav ul, .flex-container{
-        display: flex;
-        /* flex-wrap: wrap; */
-    }
-    .internship {
-        width: 25%;
-    }
-    #add-edit-internship-container {
-        max-width: 50%;
-        margin: auto;
-    }
-    #hamburger {
-        display: none;
-    }
-    .hide-small {
-        display: block;
+@media (max-width: 600px) {
+    #internship-list{
+        flex-direction: column;
     }
 }
+

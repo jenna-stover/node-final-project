@@ -1,23 +1,73 @@
-const toggleNav = () => {
-  document.getElementById("nav-items").classList.toggle("hide-small");
-};
-
 const getInternships = async () => {
   try {
-    return (await fetch("api/internships/")).json();
+    const response = await fetch("api/internships/");
+    if (!response.ok) {
+      throw new Error("Failed to fetch internships");
+    }
+    return await response.json();
   } catch (error) {
-    console.log(error);
+    console.log('There was a problem with the fetch operation:', error);
   }
 };
 
+const updateInternshipStatus = async (id, completed) => {
+  console.log("Updating internship:", id, "with completed status:", completed);
+  try {
+    let response = await fetch(`/api/internships/${id}/completed`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completed }),
+    });
+    if (!response.ok) {
+      console.log("error updating internship status");
+      throw new Error("Failed to update internship status");
+    }
+    await response.json();
+
+    const internships = await getInternships();
+    updateProgressBar(internships);
+    showInternships();
+  } catch (error) {
+    console.log('There was a problem with the fetch operation:', error);
+  }
+};
+
+const updateProgressBar = (internships) => {
+  const progressBar = document.getElementById("progress-bar");
+  if (!progressBar) {
+    console.error("Progress bar element not found");
+    return;
+  }
+
+  const total = internships.length;
+  const completed = internships.filter((internship) => internship.completed).length;
+  const percentage = (completed / total) * 100;
+
+  progressBar.style.width = `${percentage}%`;
+  progressBar.textContent = `${percentage.toFixed(2)}% Completed`;
+}
+
 const showInternships = async () => {
   let internships = await getInternships();
+  if (!internships) return;
+  console.log(internships);
+
   let internshipsDiv = document.getElementById("internship-list");
   internshipsDiv.innerHTML = "";
+  
   internships.forEach((internship) => {
     const section = document.createElement("section");
     section.classList.add("internship");
     internshipsDiv.append(section);
+
+    const completedCheckbox = document.createElement("input");
+    completedCheckbox.type = "checkbox";
+    completedCheckbox.checked = internship.completed;
+    completedCheckbox.addEventListener("change", async (e) => {
+      await updateInternshipStatus(internship._id, e.target.checked);
+      updateProgressBar(internships);
+    });
+    section.append(completedCheckbox);
 
     const a = document.createElement("a");
     a.href = "#";
@@ -36,80 +86,106 @@ const showInternships = async () => {
       displayDetails(internship);
     };
   });
+
+  updateProgressBar(internships);
 };
 
 const displayDetails = (internship) => {
   const internshipDetails = document.getElementById("internship-details");
   internshipDetails.innerHTML = "";
 
-  const div = document.createElement("div");
-  internshipDetails.append(div);
+  const placeholderMessage = document.getElementById("placeholder-message");
 
-  const h3 = document.createElement("h3");
-  h3.innerHTML = internship.name;
-  div.append(h3);
+  if (internship) {
+    if (placeholderMessage) {
+      placeholderMessage.style.display = "none";
+    }
 
-  const dLink = document.createElement("a");
-  dLink.innerHTML = "	&#x2715;";
-  internshipDetails.append(dLink);
-  dLink.id = "delete-link";
+    const div = document.createElement("div");
+    internshipDetails.append(div);
 
-  const eLink = document.createElement("a");
-  eLink.innerHTML = "&#9998;";
-  internshipDetails.append(eLink);
-  eLink.id = "edit-link";
+    const h3 = document.createElement("h3");
+    h3.innerHTML = internship.name;
+    div.append(h3);
 
-  const ul = document.createElement("ul");
-  div.append(ul);
+    const dLink = document.createElement("a");
+    dLink.innerHTML = "	&#x2715;";
+    internshipDetails.append(dLink);
+    dLink.id = "delete-link";
 
-  const applicationLink = document.createElement("a");
-  applicationLink.href = internship.link;
-  applicationLink.textContent = "Application Link";
-  applicationLink.target = "_blank";
+    const eLink = document.createElement("a");
+    eLink.innerHTML = "&#9998;";
+    internshipDetails.append(eLink);
+    eLink.id = "edit-link";
 
-  ul.append(applicationLink);
-  ul.append(getLi(`Company Name: ${internship.name}`));
-  ul.append(getLi(`Internship Location: ${internship.location}`));
-  ul.append(getLi(`Application Deadline: ${internship.deadline}`));
+    const ul = document.createElement("ul");
+    div.append(ul);
 
-  eLink.onclick = (e) => {
-    e.preventDefault();
-    document.querySelector(".dialog").classList.remove("transparent");
-    document.getElementById("add-edit-title").innerHTML = "Edit Internship";
-  };
+    const applicationLink = document.createElement("a");
+    const link = internship.link.startsWith("http://") || internship.link.startsWith("https://")
+      ? internship.link
+      : `http://${internship.link}`;
+    applicationLink.href = link;
+    applicationLink.textContent = "Application Link";
+    applicationLink.target = "_blank";
 
-  dLink.onclick = (e) => {
-    e.preventDefault();
-    deleteInternship(internship);
-  };
+    const li = document.createElement("li");
+    li.appendChild(applicationLink);
 
-  populateEditForm(internship);
+    ul.append(li);
+    ul.append(getLi(`Internship Name: ${internship.name}`));
+    ul.append(getLi(`Internship Location: ${internship.location}`));
+    ul.append(getLi(`Application Deadline: ${internship.deadline}`));
+
+    eLink.onclick = (e) => {
+      e.preventDefault();
+      const dialog = document.querySelector(".dialog");
+      dialog.classList.remove("transparent");
+
+      document.getElementById("add-edit-title").innerHTML = "Edit Internship";
+      populateEditForm(internship);
+    };
+
+    dLink.onclick = (e) => {
+      e.preventDefault();
+      deleteInternship(internship);
+    };
+  } else {
+    if (placeholderMessage) {
+      placeholderMessage.style.display = "block";
+    }
+  }
 };
 
 const getLi = data => {
   const li = document.createElement("li");
   li.textContent = data;
-
   return li;
 };
 
 const deleteInternship = async (internship) => {
-  let response = await fetch(`/api/internships/${internship._id}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-  });
-
-  if (response.status != 200) {
-    console.log("error deleting");
-    return;
+  if (confirm(`Are you sure you want to delete ${internship.name}?`)) {
+    try {
+      let response = await fetch(`/api/internships/${internship._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      });
+    
+      if (!response.ok) {
+        console.log("error deleting internship");
+        throw new Error("Error deleting internship");
+      }
+      
+      await response.json();
+      showInternships();
+      document.getElementById("internship-details").innerHTML = "";
+      resetForm();
+    } catch (error) {
+      console.log("Error deleting internship:", error);
+    }
   }
-
-  let result = await response.json();
-  showInternships();
-  document.getElementById("internship-details").innerHTML = "";
-  resetForm();
 };
 
 const populateEditForm = (internship) => {
@@ -127,37 +203,44 @@ const addEditInternship = async (e) => {
   const formData = new FormData(form);
   let response;
 
-  if (form._id.value == -1) {
-    formData.delete("_id");
-
-    response = await fetch("/api/internships", {
-      method: "POST",
-      body: formData,
-    });
+  for (let [key, value] of formData.entries()) { 
+    console.log(key, value); 
   }
 
-  else {
-    console.log(...formData);
+  try {
+    if (form._id.value == -1) {
+      formData.delete("_id");
 
-    response = await fetch(`/api/internships/${form._id.value}`, {
-      method: "PUT",
-      body: formData,
-    });
-  }
+      response = await fetch("/api/internships", {
+        method: "POST",
+        body: formData,
+      });
+    } else {
+      console.log(...formData)
 
-  if (response.status != 200) {
-    console.log("Error posting data");
-  }
+      response = await fetch(`/api/internships/${form._id.value}`, { 
+        method: "PUT", 
+        body: formData, 
+      });
+    }
 
-  internship = await response.json();
+    if (!response.ok) {
+      console.log("Error posting data");
+      throw new Error("Error posting data");
+    }
 
-  if (form._id.value != -1) {
-    displayDetails(internship);
-  }
+    const internship = await response.json();
 
-  resetForm();
-  document.querySelector(".dialog").classList.add("transparent");
-  showInternships();
+    if (form._id.value != -1) { 
+      displayDetails(internship); 
+    }
+
+    resetForm();
+    document.querySelector(".dialog").classList.add("transparent");
+    showInternships();
+  } catch (error) {
+    console.log("Error posting data:", error);
+  } 
 };
 
 const resetForm = () => {
@@ -166,22 +249,45 @@ const resetForm = () => {
   form._id = "-1";
 };
 
-const showHideAdd = (e) => {
-  e.preventDefault();
-  document.querySelector(".dialog").classList.remove("transparent");
-  document.getElementById("add-edit-title").innerHTML = "Add Internship";
-  resetForm();
-};
-
 
 window.onload = () => {
   showInternships();
-  document.getElementById("hamburger").onclick = toggleNav;
-  document.getElementById("add-edit-internship-form").onsubmit = addEditInternship;
-  document.getElementById("add-link").onclick = showHideAdd;
+  const addButton = document.getElementById("add-button");
+  const addEditForm = document.getElementById("add-edit-internship-form");
+  const closeButton = document.querySelector(".close");
 
-  document.querySelector(".close").onclick = () => {
-    document.querySelector(".dialog").classList.add("transparent");
-  };
+  if (addButton) {
+    addButton.onclick =(e) => {
+      e.preventDefault();
+      const dialog = document.querySelector(".dialog");
+      if(dialog.classList.contains("transparent")) {
+        dialog.classList.remove("transparent");
+        
+        const form = document.getElementById("add-edit-internship-form");
+        if (form) {
+          form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          console.error("Element with id 'add-edit-title' not found");
+        }
+      } else {
+        dialog.classList.add("transparent");
+      }
 
+      document.getElementById("add-edit-title").innerHTML = "Add Internship";
+      resetForm();
+    }
+  }
+
+  if (addEditForm) {
+    addEditForm.onsubmit = async (e) => {
+      await addEditInternship(e);
+      showInternships();
+    }
+  }
+
+  if (closeButton) {
+    closeButton.onclick = () => {
+      document.querySelector(".dialog").classList.add("transparent");
+    };
+  }
 };
