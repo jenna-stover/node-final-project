@@ -12,14 +12,16 @@ app.use(cors());
 app.use(express.json());
 
 const upload = multer({ dest: path.join(__dirname, "public", "images") });
+const MONGODB_URI = "mongodb://localhost:27017/internships";
+const PORT = 3000;
 
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  .connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000, 
+    socketTimeoutMS: 45000,
   })
   .then(() => console.log("Connected to mongodb..."))
-  .catch((err) => console.error("could not connect ot mongodb...", err));
+  .catch((err) => console.error("could not connect to mongodb...", err));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -161,7 +163,6 @@ const validateInternship = (internship) => {
   return schema.validate(internship);
 };
 
-const port = process.env.PORT;
-app.listen(port, () => { 
-  console.log(`Server running on http://localhost:${port}`); 
+app.listen(PORT, () => { 
+  console.log(`Server running on http://localhost:${PORT}`); 
 });
