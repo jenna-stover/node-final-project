@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 const upload = multer({ dest: path.join(__dirname, "public", "images") });
-const MONGODB_URI = "mongodb://localhost:27017/internships";
+const MONGODB_URI = "mongodb+srv://jennastover810:vigmMrzL5iGkqDeU@clusterassignment17.ydj7558.mongodb.net/internships?retryWrites=true&w=majority&appName=ClusterAssignment17";
 const PORT = 3000;
 
 mongoose
