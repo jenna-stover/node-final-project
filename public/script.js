@@ -197,6 +197,14 @@ const populateEditForm = (internship) => {
   form.link.value = internship.link;
   form.location.value = internship.location;
   form.deadline.value = internship.deadline;
+
+  const currentImg = document.getElementById("current-img");
+  if (internship.img) {
+    currentImg.src = internship.img;
+    currentImg.style.display = "block";
+  } else {
+    currentImg.style.display = "none";
+  }
 };
 
 const submitAddForm = async (e) => {

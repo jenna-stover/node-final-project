@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require("express");
 const app = express();
 const Joi = require("joi");
@@ -69,7 +68,7 @@ app.post("/api/internships", upload.single('img'), async (req, res) => {
   });
 
   if (req.file) {
-    internship.img = "images/" + req.file.filename;
+    internship.img = "/images/" + req.file.filename;
   }
 
   try {
