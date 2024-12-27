@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 
 const internshipSchema = new mongoose.Schema({
   name: String,
+  company: String,
   link: String,
   location: String,
   deadline: String,
@@ -51,6 +52,7 @@ app.get("/api/internships", async (req, res) => {
 
 //create new internship
 app.post("/api/internships", upload.single('img'), async (req, res) => {
+  console.log("Received data for new internship:", req.body);
   const result = validateInternship(req.body);
 
   if (result.error) {
@@ -60,6 +62,7 @@ app.post("/api/internships", upload.single('img'), async (req, res) => {
 
   let internship = new Internship({
     name: req.body.name,
+    company: req.body.company,
     link: req.body.link,
     location: req.body.location,
     deadline: req.body.deadline,
@@ -80,6 +83,8 @@ app.post("/api/internships", upload.single('img'), async (req, res) => {
 
 //update existing internship
 app.put("/api/internships/:id", upload.single("img"), async (req, res) => {
+  console.log("Received data for updating internship:", req.body);
+  
   const { error } = validateInternship(req.body);
 
   if (error) {
@@ -89,6 +94,7 @@ app.put("/api/internships/:id", upload.single("img"), async (req, res) => {
 
   let fieldsToUpdate = {
     name: req.body.name,
+    company: req.body.company,
     link: req.body.link,
     location: req.body.location,
     deadline: req.body.deadline,
@@ -155,6 +161,7 @@ const validateInternship = (internship) => {
   const schema = Joi.object({
     _id: Joi.allow(""),
     name: Joi.string().min(3).required(),
+    company: Joi.string().min(2).required(),
     link: Joi.string().min(3).required(),
     location: Joi.allow(""),
     deadline: Joi.allow(""),

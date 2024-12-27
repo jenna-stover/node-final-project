@@ -56,9 +56,8 @@ const showInternships = async () => {
   internshipsDiv.innerHTML = "";
   
   internships.forEach((internship) => {
-    const section = document.createElement("section");
+    const section = document.createElement("section"); 
     section.classList.add("internship");
-    internshipsDiv.append(section);
 
     const completedCheckbox = document.createElement("input");
     completedCheckbox.type = "checkbox";
@@ -71,6 +70,10 @@ const showInternships = async () => {
 
     const a = document.createElement("a");
     a.href = "#";
+    a.addEventListener("click", (e) => { 
+      e.preventDefault(); 
+      displayDetails(internship); 
+    });
     section.append(a);
 
     const h3 = document.createElement("h3");
@@ -79,12 +82,9 @@ const showInternships = async () => {
 
     const img = document.createElement("img");
     img.src = internship.img;
-    section.append(img);
+    a.append(img);
 
-    a.onclick = (e) => {
-      e.preventDefault();
-      displayDetails(internship);
-    };
+    internshipsDiv.append(section);
   });
 
   updateProgressBar(internships);
@@ -105,7 +105,7 @@ const displayDetails = (internship) => {
     internshipDetails.append(div);
 
     const h3 = document.createElement("h3");
-    h3.innerHTML = internship.name;
+    h3.innerHTML = internship.company;
     div.append(h3);
 
     const dLink = document.createElement("a");
@@ -139,10 +139,11 @@ const displayDetails = (internship) => {
 
     eLink.onclick = (e) => {
       e.preventDefault();
-      const dialog = document.querySelector(".dialog");
+      const dialog = document.getElementById('edit-internship-container');
       dialog.classList.remove("transparent");
 
-      document.getElementById("add-edit-title").innerHTML = "Edit Internship";
+      dialog.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById("edit-title").innerHTML = "Edit Internship";
       populateEditForm(internship);
     };
 
@@ -181,7 +182,7 @@ const deleteInternship = async (internship) => {
       await response.json();
       showInternships();
       document.getElementById("internship-details").innerHTML = "";
-      resetForm();
+      resetEditForm();
     } catch (error) {
       console.log("Error deleting internship:", error);
     }
@@ -189,40 +190,25 @@ const deleteInternship = async (internship) => {
 };
 
 const populateEditForm = (internship) => {
-  const form = document.getElementById("add-edit-internship-form");
+  const form = document.getElementById("edit-internship-form");
   form._id.value = internship._id;
   form.name.value = internship.name;
+  form.company.value = internship.company;
   form.link.value = internship.link;
   form.location.value = internship.location;
   form.deadline.value = internship.deadline;
 };
 
-const addEditInternship = async (e) => {
+const submitAddForm = async (e) => {
   e.preventDefault();
-  const form = document.getElementById("add-edit-internship-form");
+  const form = document.getElementById("add-internship-form");
   const formData = new FormData(form);
-  let response;
-
-  for (let [key, value] of formData.entries()) { 
-    console.log(key, value); 
-  }
-
+  
   try {
-    if (form._id.value == -1) {
-      formData.delete("_id");
-
-      response = await fetch("/api/internships", {
-        method: "POST",
-        body: formData,
-      });
-    } else {
-      console.log(...formData)
-
-      response = await fetch(`/api/internships/${form._id.value}`, { 
-        method: "PUT", 
-        body: formData, 
-      });
-    }
+    const response = await fetch("/api/internships/", {
+      method: "POST",
+      body: formData,
+    });
 
     if (!response.ok) {
       console.log("Error posting data");
@@ -231,20 +217,49 @@ const addEditInternship = async (e) => {
 
     const internship = await response.json();
 
-    if (form._id.value != -1) { 
-      displayDetails(internship); 
-    }
-
-    resetForm();
-    document.querySelector(".dialog").classList.add("transparent");
+    resetAddForm();
+    document.getElementById('add-internship-container').classList.add("transparent");
     showInternships();
   } catch (error) {
     console.log("Error posting data:", error);
   } 
 };
 
-const resetForm = () => {
-  const form = document.getElementById("add-edit-internship-form");
+const submitEditForm = async (e) => {
+  e.preventDefault();
+  const form = document.getElementById("edit-internship-form");
+  const formData = new FormData(form);
+  
+  try {
+    const response = await fetch(`/api/internships/${form._id.value}`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.log("Error editing data");
+      throw new Error("Error editing data");
+    }
+
+    const internship = await response.json();
+
+    resetEditForm();
+    document.getElementById('edit-internship-container').classList.add("transparent");
+    displayDetails(internship);
+    showInternships();
+  } catch (error) {
+    console.log("Error editing data:", error);
+  } 
+};
+
+const resetAddForm = () => {
+  const form = document.getElementById("add-internship-form");
+  form.reset();
+  form._id = "-1";
+};
+
+const resetEditForm = () => {
+  const form = document.getElementById("edit-internship-form");
   form.reset();
   form._id = "-1";
 };
@@ -252,42 +267,56 @@ const resetForm = () => {
 
 window.onload = () => {
   showInternships();
+
   const addButton = document.getElementById("add-button");
-  const addEditForm = document.getElementById("add-edit-internship-form");
-  const closeButton = document.querySelector(".close");
+  const closeButtons = document.querySelectorAll(".close");
+  const addForm = document.getElementById("add-internship-form");
+  const editForm = document.getElementById("edit-internship-form");
 
   if (addButton) {
-    addButton.onclick =(e) => {
+    addButton.onclick = (e) => {
       e.preventDefault();
-      const dialog = document.querySelector(".dialog");
-      if(dialog.classList.contains("transparent")) {
+      const dialog = document.getElementById('add-internship-container');
+      if (dialog.classList.contains("transparent")) {
         dialog.classList.remove("transparent");
-        
-        const form = document.getElementById("add-edit-internship-form");
+
+        const form = document.getElementById("add-internship-form");
         if (form) {
           form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-          console.error("Element with id 'add-edit-title' not found");
+          console.error("Error with scroll");
         }
       } else {
         dialog.classList.add("transparent");
       }
 
-      document.getElementById("add-edit-title").innerHTML = "Add Internship";
-      resetForm();
-    }
+      document.getElementById("add-title").innerHTML = "Add Internship";
+      resetAddForm();
+    };
   }
 
-  if (addEditForm) {
-    addEditForm.onsubmit = async (e) => {
-      await addEditInternship(e);
+  closeButtons.forEach(button => {
+    button.onclick = () => {
+      const dialogContainer = button.closest('.dialog');
+      if (dialogContainer) {
+        dialogContainer.classList.add("transparent");
+      } else {
+        console.error("Error with close button");
+      }
+    };
+  });
+
+  if (addForm) {
+    addForm.onsubmit = async (e) => {
+      await submitAddForm(e);
       showInternships();
-    }
+    };
   }
 
-  if (closeButton) {
-    closeButton.onclick = () => {
-      document.querySelector(".dialog").classList.add("transparent");
+  if (editForm) {
+    editForm.onsubmit = async (e) => {
+      await submitEditForm(e);
+      showInternships();
     };
   }
 };
