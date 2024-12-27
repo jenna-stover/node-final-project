@@ -143,7 +143,7 @@ const displayDetails = (internship) => {
       dialog.classList.remove("transparent");
 
       dialog.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.getElementById("edit-title").innerHTML = "Edit Internship";
+      document.getElementById("edit-title").innerHTML = "Edit Details";
       populateEditForm(internship);
     };
 
@@ -290,7 +290,7 @@ window.onload = () => {
         dialog.classList.add("transparent");
       }
 
-      document.getElementById("add-title").innerHTML = "Add Internship";
+      document.getElementById("add-title").innerHTML = "Add Prospect";
       resetAddForm();
     };
   }
