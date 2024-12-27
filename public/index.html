@@ -16,7 +16,7 @@
                 <div id="progress-bar"></div>
             </div>
 
-            <div class="section-one">
+            <div class="main-container">
                 <div class="internship-list-container split">
                     <div id="center-internship-list">
                         <div>
@@ -28,6 +28,41 @@
                         </div>
 
                         <div id="internship-list"></div>
+
+                        <div id="add-internship-container" class="dialog transparent">
+                            <form id="add-internship-form" method="post">
+                                <span class="close">&times;</span>
+                                <h3 id="add-title"></h3>
+                                <input type="hidden" name="_id" value="-1" />
+                                <p>
+                                    <label for="name ">Position Name:</label>
+                                    <input type="text" id="name" name="name" required />
+                                </p>
+                                <p>
+                                    <label for="company">Company:</label>
+                                    <input type="text" id="company" name="company" required />
+                                </p>
+                                <p>
+                                    <label for="link">Link:</label>
+                                    <input type="text" id="link" name="link" required />
+                                </p>
+                                <p>
+                                    <label for="location">Location:</label>
+                                    <input type="text" id="location" name="location" />
+                                </p>
+                                <p>
+                                    <label for="deadline">Deadline:</label>
+                                    <input type="date" id="deadline" name="deadline" />
+                                </p>
+                                <p>
+                                    <label for="img">Upload Image:</label>
+                                    <input type="file" id="img" name="img" />
+                                </p>
+                                <p>
+                                    <button id="submit-button" type="submit">Submit</button>
+                                </p>
+                            </form>
+                        </div> 
                     </div>
                 </div>
 
@@ -40,81 +75,43 @@
                         <div id="internship-details">
                             <p id="placeholder-message">Click on a Job Prospect to display details</p>
                         </div>
+
+                        <div id="edit-internship-container" class="dialog transparent">
+                            <form id="edit-internship-form" method="post">
+                                <span class="close">&times;</span>
+                                <h3 id="edit-title"></h3>
+                                <input type="hidden" name="_id" value="-1" />
+                                <p>
+                                    <label for="name ">Position Name:</label>
+                                    <input type="text" id="name" name="name" required />
+                                </p>
+                                <p>
+                                    <label for="company">Company:</label>
+                                    <input type="text" id="company" name="company" required />
+                                </p>
+                                <p>
+                                    <label for="link">Link:</label>
+                                    <input type="text" id="link" name="link" required />
+                                </p>
+                                <p>
+                                    <label for="location">Location:</label>
+                                    <input type="text" id="location" name="location" />
+                                </p>
+                                <p>
+                                    <label for="deadline">Deadline:</label>
+                                    <input type="date" id="deadline" name="deadline" />
+                                </p>
+                                <p>
+                                    <label for="img">Upload Image:</label>
+                                    <input type="file" id="img" name="img" />
+                                </p>
+                                <p>
+                                    <button id="submit-button" type="submit">Submit</button>
+                                </p>
+                            </form>
+                        </div> 
                     </div>
                 </div>
-            </div>
-            
-            <div class="section-two">
-                <div id="add-internship-container" class="dialog transparent">
-                    <form id="add-internship-form" method="post">
-                        <span class="close">&times;</span>
-                        <h3 id="add-title"></h3>
-                        <input type="hidden" name="_id" value="-1" />
-                        <p>
-                            <label for="name ">Position Name:</label>
-                            <input type="text" id="name" name="name" required />
-                        </p>
-                        <p>
-                            <label for="company">Company:</label>
-                            <input type="text" id="company" name="company" required />
-                        </p>
-                        <p>
-                            <label for="link">Link:</label>
-                            <input type="text" id="link" name="link" required />
-                        </p>
-                        <p>
-                            <label for="location">Location:</label>
-                            <input type="text" id="location" name="location" />
-                        </p>
-                        <p>
-                            <label for="deadline">Deadline:</label>
-                            <input type="date" id="deadline" name="deadline" />
-                        </p>
-                        <p>
-                            <label for="img">Upload Image:</label>
-                            <input type="file" id="current-img" name="img" />
-                            <img src="" alt="current image">
-                        </p>
-                        <p>
-                            <button id="submit-button" type="submit">Submit</button>
-                        </p>
-                    </form>
-                </div> 
-
-                <div id="edit-internship-container" class="dialog transparent">
-                    <form id="edit-internship-form" method="post">
-                        <span class="close">&times;</span>
-                        <h3 id="edit-title"></h3>
-                        <input type="hidden" name="_id" value="-1" />
-                        <p>
-                            <label for="name ">Position Name:</label>
-                            <input type="text" id="name" name="name" required />
-                        </p>
-                        <p>
-                            <label for="company">Company:</label>
-                            <input type="text" id="company" name="company" required />
-                        </p>
-                        <p>
-                            <label for="link">Link:</label>
-                            <input type="text" id="link" name="link" required />
-                        </p>
-                        <p>
-                            <label for="location">Location:</label>
-                            <input type="text" id="location" name="location" />
-                        </p>
-                        <p>
-                            <label for="deadline">Deadline:</label>
-                            <input type="date" id="deadline" name="deadline" />
-                        </p>
-                        <p>
-                            <label for="img">Upload Image:</label>
-                            <input type="file" id="img" name="img" />
-                        </p>
-                        <p>
-                            <button id="submit-button" type="submit">Submit</button>
-                        </p>
-                    </form>
-                </div> 
             </div>
         </main>
     </div>

@@ -198,7 +198,7 @@ const populateEditForm = (internship) => {
   form.location.value = internship.location;
   form.deadline.value = internship.deadline;
 
-  const currentImg = document.getElementById("current-img");
+  const currentImg = document.getElementById("img");
   if (internship.img) {
     currentImg.src = internship.img;
     currentImg.style.display = "block";
